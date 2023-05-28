@@ -1,0 +1,85 @@
+﻿@model SPMasterDetails.ViewModel.VmSale
+@{
+    ViewData["Title"] = "Single";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ListSaleMaster = ViewData["List"] as List<SPMasterDetails.Models.SaleMaster>;
+    var ButtonValue = Model.SaleId > 0 ? "Update" : "Add";
+    var IndexItem = 0;
+}
+
+<h1>Single</h1>
+
+@using (Html.BeginForm("Single", "Home"))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.SaleId)
+    @Html.LabelFor(m=>m.CustomerName)
+    <br />
+    @Html.TextBoxFor(m=>m.CustomerName)
+    <br />
+    @Html.LabelFor(m=>m.CustomerAddress)
+    <br />
+    @Html.TextBoxFor(m=>m.CustomerAddress)
+    <br />
+    <button type="submit" id="btnUpdate">@ButtonValue</button>
+    <br />
+    @Html.LabelFor(m=>m.Gender)
+    <br />
+    <div>
+        Male
+        @Html.RadioButtonFor(m=>m.Gender,"Male")
+        Female
+        @Html.RadioButtonFor(m=>m.Gender,"Female")
+    </div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ProductName</th>
+                    <th>Price</th>
+                    <th>
+                        <button type="button" onclick="addItem();">AddItem</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tSD">
+                @foreach (var Item in Model.SaleDetails)
+                {
+                    <tr id="tr_@IndexItem">
+                        <td>
+                            <input type="text" id="ProductName_@IndexItem" name="ProductName" value="@Item.ProductName" />
+                        </td>
+                        <td><input type="number" id="Price_@IndexItem" name="Price" value="@Item.Price" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>CustomerName</th>
+            <th>CustomerAddress</th>
+            <th>Gender</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var Item in ListSaleMaster)
+        {
+            <tr>
+                <td>@Item.CustomerName</td>
+                <td>@Item.CustomerAddress</td>
+                <td>@Item.Gender</td>
+                <td><a href="/Home/Single?id=@Item.SaleId">Edit</a></td>
+                <td><a href="/Home/singleDelete?id=@Item.SaleId">Delete</a></td>
+            </tr>
+        }
+    </table>
+}
+<script>
+    function addItem(){
+        var TRs='<tr id="tr_'+0+'"><td><input type="text"id="ProductName_1"name="ProductName""/></td>'+'<td><input type="number"id="Price_1"name="Price"/></td>'+'</tr>';
+        document.getElementById('tSD').innerHTML +=TRs;
+    }
+</script>
+
+
